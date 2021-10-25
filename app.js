@@ -120,7 +120,7 @@ class App extends React.Component {
     this.state = { language: "cur_code" };
   }
   componentDidMount() {
-    bringJson(this.state.language);
+    bringJson("cur_name");
   }
 
   handleChange() {
