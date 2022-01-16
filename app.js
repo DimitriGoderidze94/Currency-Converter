@@ -1,9 +1,8 @@
 "use strict";
-const e = React.createElement;
 const BASE_URL = "https://any.ge/currency/api.php?info=yvela";
 
 function getKeyValues(key, cb) {
-  for (var i = 0; i < data.currency.length; i++) {
+  for (let i = 0; i < data.currency.length; i++) {
     Arr[i] = data.currency[i][key];
   }
   cb();
@@ -14,14 +13,14 @@ function bringJson(language) {
     .then((res) => res.json())
     .then((data) => {
       function getKeyValues(key, cb) {
-        for (var i = 0; i < data.currency.length; i++) {
+        for (let i = 0; i < data.currency.length; i++) {
           Arr[i] = data.currency[i][key];
         }
         cb();
       }
 
       getKeyValues(language, function () {
-        for (var i = 0; i < Arr.length; i++) {
+        for (let i = 0; i < Arr.length; i++) {
           document.getElementsByClassName("selectClass")[0].innerHTML +=
             "<option class='optionClass1'>" + Arr[i] + "</option>";
           document.getElementsByClassName("selectClass")[1].innerHTML +=
@@ -30,12 +29,12 @@ function bringJson(language) {
       });
 
       getKeyValues("cur_value", function () {
-        for (var i = 0; i < Arr.length; i++) {
+        for (let i = 0; i < Arr.length; i++) {
           document
             .getElementsByClassName("optionClass1")
             [i].setAttribute("rate", Arr[i]);
         }
-        for (var i = 0; i < Arr.length; i++) {
+        for (let i = 0; i < Arr.length; i++) {
           document
             .getElementsByClassName("optionClass2")
             [i].setAttribute("rate", Arr[i]);
@@ -44,18 +43,13 @@ function bringJson(language) {
     });
 }
 
-var Arr = [];
+let Arr = [];
 
 class Language extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { language: "cur_code" };
-  }
-
   render() {
     return (
       <div className="dropDown">
-        <select className="chooseLanguage" onChange={this.props.handleChange}>
+        <select className="chooseLanguage" onChange={this.props.languageChange}>
           <option>Geo</option>
           <option>En</option>
         </select>
@@ -72,23 +66,23 @@ class Row extends React.Component {
   }
 
   handleChange() {
-    var yourSelect1 = document.getElementsByClassName("selectClass")[1];
-    var rate1 =
+    let yourSelect1 = document.getElementsByClassName("selectClass")[1];
+    let rate1 =
       yourSelect1.options[yourSelect1.selectedIndex].getAttribute("rate");
-    var yourSelect = document.getElementsByClassName("selectClass")[0];
-    var rate0 =
+    let yourSelect = document.getElementsByClassName("selectClass")[0];
+    let rate0 =
       yourSelect.options[yourSelect.selectedIndex].getAttribute("rate");
-    var totalValue = document.getElementsByClassName("input1")[0].value * rate0;
+    let totalValue = document.getElementsByClassName("input1")[0].value * rate0;
     document.getElementsByClassName("input1")[1].value = totalValue / rate1;
   }
   handleChange1() {
-    var yourSelect1 = document.getElementsByClassName("selectClass")[1];
-    var rate1 =
+    let yourSelect1 = document.getElementsByClassName("selectClass")[1];
+    let rate1 =
       yourSelect1.options[yourSelect1.selectedIndex].getAttribute("rate");
-    var yourSelect = document.getElementsByClassName("selectClass")[0];
-    var rate0 =
+    let yourSelect = document.getElementsByClassName("selectClass")[0];
+    let rate0 =
       yourSelect.options[yourSelect.selectedIndex].getAttribute("rate");
-    var totalValue = document.getElementsByClassName("input1")[1].value * rate1;
+    let totalValue = document.getElementsByClassName("input1")[1].value * rate1;
     document.getElementsByClassName("input1")[0].value = totalValue / rate0;
   }
   render() {
@@ -117,38 +111,40 @@ class Row extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { language: "cur_code" };
+    this.state = { language: "cur_name" };
   }
   componentDidMount() {
-    bringJson("cur_name");
+    bringJson(this.state.language);
   }
 
-  handleChange() {
-    var yourSelect = document.getElementsByClassName("chooseLanguage")[0];
-    var lang = yourSelect.options[yourSelect.selectedIndex].innerHTML;
-    if (lang == "Geo") {
+  languageChange(e) {
+    document.getElementsByClassName("selectClass")[0].innerHTML = "";
+    document.getElementsByClassName("selectClass")[1].innerHTML = "";
+    if (e.target.value === "Geo") {
       this.setState({
         language: "cur_code",
       });
-    } else if (lang == "En") {
+      bringJson("cur_code");
+    } else if (e.target.value === "En") {
       this.setState({
         language: "cur_name",
       });
+      bringJson("cur_name");
     }
-    document.getElementsByClassName("selectClass")[0].innerHTML = "";
-    document.getElementsByClassName("selectClass")[1].innerHTML = "";
-    bringJson(this.state.language);
+
+    document.getElementsByClassName("input1")[0].value = "";
+    document.getElementsByClassName("input1")[1].value = "";
   }
 
   render() {
     return (
       <div id="container">
-        <Language handleChange={this.handleChange.bind(this)} />
+        <Language languageChange={this.languageChange.bind(this)} />
         <Row />
       </div>
     );
   }
 }
 
-const domContainer = document.querySelector("#like_button_container");
 ReactDOM.render(<App />, document.getElementById("root"));
+
