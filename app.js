@@ -122,14 +122,14 @@ class App extends React.Component {
     document.getElementsByClassName("selectClass")[1].innerHTML = "";
     if (e.target.value === "Geo") {
       this.setState({
-        language: "cur_code",
-      });
-      bringJson("cur_code");
-    } else if (e.target.value === "En") {
-      this.setState({
         language: "cur_name",
       });
       bringJson("cur_name");
+    } else if (e.target.value === "En") {
+      this.setState({
+        language: "cur_code",
+      });
+      bringJson("cur_code");
     }
 
     document.getElementsByClassName("input1")[0].value = "";
@@ -145,6 +145,9 @@ class App extends React.Component {
     );
   }
 }
+
+ReactDOM.render(<App />, document.getElementById("root"));
+
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
